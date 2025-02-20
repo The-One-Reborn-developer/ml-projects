@@ -5,6 +5,7 @@ from pathlib import Path
 
 from fastai.vision.all import (
     SegmentationDataLoaders,
+    Resize,
     get_image_files,
     resnet34,
     unet_learner
@@ -18,7 +19,8 @@ data_block = SegmentationDataLoaders.from_label_func(
     dataset_path,
     fnames=get_image_files(dataset_path / 'images'),
     label_func=lambda file_name: dataset_path / 'masks' / file_name.name,
-    codes=numpy.loadtxt(dataset_path / 'classes.txt', dtype=str)
+    codes=numpy.loadtxt(dataset_path / 'classes.txt', dtype=str),
+    item_tfms=Resize(224)
 )
 
 

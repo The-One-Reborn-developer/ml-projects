@@ -1,5 +1,6 @@
-import kagglehub
-import numpy
+from numpy import loadtxt
+
+from kagglehub import dataset_download
 
 from pathlib import Path
 
@@ -12,14 +13,14 @@ from fastai.vision.all import (
 )
 
 
-dataset_path_string = kagglehub.dataset_download('intelecai/car-segmentation')
+dataset_path_string = dataset_download('intelecai/car-segmentation')
 dataset_path = Path(dataset_path_string) / 'car-segmentation'
 
 data_block = SegmentationDataLoaders.from_label_func(
     dataset_path,
     fnames=get_image_files(dataset_path / 'images'),
     label_func=lambda file_name: dataset_path / 'masks' / file_name.name,
-    codes=numpy.loadtxt(dataset_path / 'classes.txt', dtype=str),
+    codes=loadtxt(dataset_path / 'classes.txt', dtype=str),
     item_tfms=Resize(224)
 )
 

@@ -1,4 +1,4 @@
-import kagglehub
+from kagglehub import dataset_download
 
 from pathlib import Path
 
@@ -9,10 +9,11 @@ from fastai.vision.all import (
     vision_learner,
     error_rate,
     resnet34,
+    URLs
 )
 
 
-path_string = kagglehub.dataset_download("anujms/car-damage-detection")
+path_string = dataset_download("anujms/car-damage-detection")
 path = Path(path_string) / 'data1a'
 
 data_block = ImageDataLoaders.from_folder(

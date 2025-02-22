@@ -8,8 +8,7 @@ from fastai.vision.all import (
     aug_transforms,
     vision_learner,
     error_rate,
-    resnet34,
-    URLs
+    resnet34
 )
 
 

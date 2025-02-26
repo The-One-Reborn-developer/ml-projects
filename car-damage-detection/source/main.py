@@ -27,6 +27,5 @@ data_block = ImageDataLoaders.from_folder(
 learner = vision_learner(data_block, resnet34, metrics=error_rate)
 learner.fine_tune(1)
 
-
 test = Path('.') / 'test' / '1.jpg'
 learner.predict(test)

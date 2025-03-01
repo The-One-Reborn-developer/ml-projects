@@ -20,12 +20,12 @@ data_block = ImageDataLoaders.from_folder(
     'training',
     'validation',
     seed=42,
-    item_tfms=Resize(400),
+    item_tfms=Resize(224),
     batch_tfms=aug_transforms()
 )
 
 learner = vision_learner(data_block, resnet34, metrics=error_rate)
-learner.fine_tune(1)
+learner.fine_tune(8)
 
 test = Path('.') / 'test' / '1.jpg'
 learner.predict(test)

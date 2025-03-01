@@ -10,6 +10,11 @@ A collection of CV projects made while learning.
 
 [Kaggle notebook](https://www.kaggle.com/code/theonereborn/car-damage-detection)
 
+#### Models error rate
+
+* v1 ???
+* v2 5%
+
 ### Car segmentation
 
 [GitHub source code](https://github.com/The-One-Reborn-developer/cv-projects/tree/master/car-segmentation)

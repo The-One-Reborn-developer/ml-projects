@@ -12,7 +12,7 @@ A collection of CV projects made while learning.
 
 #### Models error rate
 
-* v1 ???
+* v1 ???. Falsely predicted images from the test set.
 * v2 5%
 
 ### Car segmentation

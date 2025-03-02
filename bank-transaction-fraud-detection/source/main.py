@@ -24,8 +24,8 @@ data_frame['Transaction_Hour'] = pandas.to_datetime(
     data_frame['Transaction_Time'], format='%H:%M:%S').dt.hour
 data_frame.drop(columns=['Transaction_Time'], inplace=True)
 
-data_block = TabularDataLoaders.from_csv(
-    dataset_path,
+data_block = TabularDataLoaders.from_df(
+    data_frame,
     y_names='Is_Fraud',
     cat_names=['Gender', 'State', 'City', 'Bank_Branch', 'Account_Type',
                'Transaction_ID', 'Transaction_Date', 'Transaction_Type',

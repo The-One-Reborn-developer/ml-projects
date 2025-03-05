@@ -1,5 +1,3 @@
-import timm
-
 from kagglehub import dataset_download
 
 from pathlib import Path

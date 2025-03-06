@@ -18,6 +18,6 @@ A collection of CV projects made while learning.
 
 * car-damage-detection_v1 5%.
 
-#### Models accuracy rate
+#### Models loss rate
 
-* v1 ???
+* car-segmentation_v1 9%.

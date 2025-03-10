@@ -1,14 +1,10 @@
-import pandas
-
-from IPython.display import display
 from PIL import Image
 from pathlib import Path
 
 from fastai.vision.all import (
     URLs,
     untar_data,
-    tensor,
-    show_image
+    tensor
 )
 
 

@@ -19,7 +19,7 @@ data_frame['Transaction_Hour'] = pandas.to_datetime(
     data_frame['Transaction_Time'], format='%H:%M:%S').dt.hour
 data_frame.drop(columns=['Transaction_Time'], inplace=True)
 
-y = data_frame['Is_Fraud']
+y = data_frame.Is_Fraud
 features = ['Gender', 'State', 'City', 'Bank_Branch', 'Account_Type',
             'Transaction_ID', 'Transaction_Date', 'Transaction_Type',
             'Merchant_Category', 'Transaction_Device', 'Device_Type',

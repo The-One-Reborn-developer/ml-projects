@@ -21,10 +21,12 @@ data_block = TextDataLoaders.from_csv(
 )
 
 
-learner = text_classifier_learner(data_block, AWD_LSTM, drop_mult=0.5, metrics=accuracy)
+learner = text_classifier_learner(
+    data_block, AWD_LSTM, drop_mult=0.5, metrics=accuracy)
 learner.fine_tune(4, 1e-2)
 
-learner.predict('Whoever came up with this idea needs a huge raise. The last joker would have been very interesting to see too')
+learner.predict(
+    'Whoever came up with this idea needs a huge raise. The last joker would have been very interesting to see too')
 learner.predict('The man on the wheelchair has my respect 🗿💯')
 learner.predict('Another murderer')
 learner.predict('Ngl, that shit was SICK')

@@ -1,23 +1,13 @@
 import torch
 
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
+from transformers import AutoTokenizer, BertModel
 
 
-model = 'distilbert-base-uncased-finetuned-sst-2-english'
-tokenizer = AutoTokenizer.from_pretrained(model)
-model = AutoModelForSequenceClassification.from_pretrained(model)
+MODEL = BertModel.from_pretrained('bert-base-cased')
+TOKENIZER = AutoTokenizer.from_pretrained('bert-base-cased')
 
-inputs = [
-    "This guy tweaking",
-    "I'll have two number nines, a number nine large, a number six with extra dip, two number fourty fives, one with cheese, and a large soda.",
-    "Dat's good"
-]
-tokenized_inputs = tokenizer(inputs, truncation=True, padding=True, return_tensors='pt')
+input_ids = TOKENIZER(['Hello!', 'Cool.', 'Nice!'])['input_ids']
+tensor = torch.tensor(input_ids)
 
-outputs = model(**tokenized_inputs)
-
-predictions = torch.nn.functional.softmax(outputs.logits, dim=-1)
-print(predictions)
-
-classification = pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
-print(classification(inputs))
+output = MODEL(tensor)
+print(output)

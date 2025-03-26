@@ -30,34 +30,16 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                 "messages": [
                     {
                         "role": "system",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": SYSTEM_PROMPT
-                            }
-                        ]
+                        "content": SYSTEM_PROMPT
                     },
                     {
                         "role": "user",
-                        "content": [
-                            {
-                                "type": "image",
-                                "image": os.path.join(data_dir, f'{i}.jpg')
-                            },
-                            {
-                                "type": "text",
-                                "text": USER_PROMPT
-                            }
-                        ]
+                        "content": USER_PROMPT,
+                        "images": os.path.join(data_dir, f'{i}.jpg')
                     },
                     {
                         "role": "assistant",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": json.dumps(img_json, ensure_ascii=False)
-                            }
-                        ]
+                        "content": json.dumps(img_json, ensure_ascii=False)
                     }
                 ]
             }

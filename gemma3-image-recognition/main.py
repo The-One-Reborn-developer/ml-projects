@@ -1,1 +1,10 @@
-from prompts import SYSTEM_PROMPT, USER_PROMPT
+import os
+
+from dotenv import load_dotenv
+from huggingface_hub import login
+
+
+load_dotenv()
+login(os.getenv('HUGGINGFACE_TOKEN'))
+
+

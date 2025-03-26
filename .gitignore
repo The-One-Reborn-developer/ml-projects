@@ -1,3 +1,8 @@
 .venv
 .ipynb_checkpoints/
 idcard/
+bank_card/
+*.jsonl
+urls.txt
+.env
+__pycache__

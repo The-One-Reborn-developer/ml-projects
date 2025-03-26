@@ -2,6 +2,8 @@ import os
 import json
 import argparse
 
+from prompts import SYSTEM_PROMPT, USER_PROMPT
+
 
 def create_jsonl(image_urls_file, data_dir, output_file):
     with open(image_urls_file, 'r') as f:
@@ -19,8 +21,38 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                 continue
 
             record = {
-                "input_image": os.path.join(data_dir, f'{i}.jpg'),
-                "output_text": json.dumps(img_json, ensure_ascii=False)
+                "contents": [
+                    {
+                        "role": "system",
+                        "parts": [
+                            {
+                                "text": SYSTEM_PROMPT
+                            }
+                        ]
+                    },
+                    {
+                        "role": "user",
+                        "parts": [
+                            {
+                                "fileData": {
+                                    "mimeType": "image/jpeg",
+                                    "fileUri": os.path.join(data_dir, f'{i}.jpg')
+                                }
+                            },
+                            {
+                                "text": USER_PROMPT
+                            }
+                        ]
+                    },
+                    {
+                        "role": "model",
+                        "parts": [
+                            {
+                                "text": json.dumps(img_json, ensure_ascii=False)
+                            }
+                        ]
+                    }
+                ]
             }
 
             outfile.write(json.dumps(record, ensure_ascii=False) + '\n')

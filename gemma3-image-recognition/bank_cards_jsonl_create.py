@@ -27,33 +27,34 @@ def create_jsonl(image_urls_file, data_dir, output_file):
             }
 
             prompts_record = {
-                "contents": [
+                "messages": [
                     {
                         "role": "system",
-                        "parts": [
+                        "content": [
                             {
+                                "type": "text",
                                 "text": SYSTEM_PROMPT
                             }
                         ]
                     },
                     {
                         "role": "user",
-                        "parts": [
+                        "content": [
                             {
-                                "fileData": {
-                                    "mimeType": "image/jpeg",
-                                    "fileUri": os.path.join(data_dir, f'{i}.jpg')
-                                }
+                                "type": "image",
+                                "image": os.path.join(data_dir, f'{i}.jpg')
                             },
                             {
+                                "type": "text",
                                 "text": USER_PROMPT
                             }
                         ]
                     },
                     {
-                        "role": "model",
-                        "parts": [
+                        "role": "assistant",
+                        "content": [
                             {
+                                "type": "text",
                                 "text": json.dumps(img_json, ensure_ascii=False)
                             }
                         ]
@@ -61,7 +62,7 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                 ]
             }
 
-            outfile.write(json.dumps(input_output_record, ensure_ascii=False) + '\n')
+            outfile.write(json.dumps(prompts_record, ensure_ascii=False) + '\n')
 
 
 if __name__ == "__main__":

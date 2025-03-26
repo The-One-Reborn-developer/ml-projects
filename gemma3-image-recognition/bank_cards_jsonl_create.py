@@ -20,7 +20,13 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                 print(f"Файл {img_json_file} не найден, пропускаем.")
                 continue
 
-            record = {
+            input_output_record = {
+                "input_image": os.path.join(data_dir, f'{i}.jpg'),
+                "input_text": USER_PROMPT,
+                "output_text": json.dumps(img_json, ensure_ascii=False)
+            }
+
+            prompts_record = {
                 "contents": [
                     {
                         "role": "system",
@@ -55,7 +61,7 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                 ]
             }
 
-            outfile.write(json.dumps(record, ensure_ascii=False) + '\n')
+            outfile.write(json.dumps(input_output_record, ensure_ascii=False) + '\n')
 
 
 if __name__ == "__main__":

@@ -1,22 +1,26 @@
 import os
 import json
+import ollama
+import base64
 
-from io import BytesIO
 from logging import basicConfig, getLogger, INFO
-from pathlib import Path
 from PIL import Image
+from pathlib import Path
 from dotenv import load_dotenv
-from huggingface_hub import login
-from datasets import Dataset
 
 
 load_dotenv()
-login(os.getenv('HUGGINGFACE_TOKEN'))
 
 basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 LOGGER = getLogger(__name__)
 
 JSONL_PATH = Path('.') / 'gemma3-image-recognition' / 'bank_cards.jsonl'
+ARCHITECTURE = 'gemma3:12b'
+
+
+def base64_encode(image_path: str) -> str:
+    with open(image_path, mode='rb') as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
 
 
 def load_jsonl_dataset(jsonl_file):
@@ -26,29 +30,23 @@ def load_jsonl_dataset(jsonl_file):
         for index, line in enumerate(file):
             try:
                 content = json.loads(line)
-                image_path = content['messages'][1]['content'][0]['image']
+                image_path = content['messages'][1]['images']
                 LOGGER.info(f'Processing {index + 1}: {image_path}')
 
                 if not os.path.exists(image_path):
                     LOGGER.warning(f'{image_path} does not exist')
                     continue
                 
-                image = Image.open(image_path).convert('RGB')
-                '''
-                with Image.open(image_path) as image:
-                    image = image.convert('RGB')
-                    image_bytes = BytesIO()
-                    image.save(image_bytes, format='JPEG')
-                    image_bytes = image_bytes.getvalue()
-                '''
-                content['messages'][1]['content'][0]['image'] = image
+                encoded_image = base64_encode(image_path)
+                LOGGER.info(f"Encoded image (truncated): {encoded_image[:50]}...")
+                content['messages'][1]['images'] = [encoded_image]
 
-                data.append(content)
+                data.append(content['messages'])
             except Exception:
                 LOGGER.exception(f'Error processing image {image_path}.')
                 continue
 
-    return Dataset.from_list(data[:1]) if data else None
+    return data[:1]
 
 
 if __name__ == '__main__':
@@ -56,6 +54,7 @@ if __name__ == '__main__':
 
     if len(dataset) > 0:
         LOGGER.info(f'Loaded dataset with {len(dataset)} entries.')
-        LOGGER.info(f'First entry: {dataset[0]}')
+        response = ollama.chat(model=ARCHITECTURE, messages=dataset[0])
+        LOGGER.info(f'Gemma 3:12b response:\n{response}')
     else:
         LOGGER.error('Dataset is empty or failed to load.')

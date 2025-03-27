@@ -1,11 +1,12 @@
 import os
 import json
-import ollama
 import base64
 
+from ollama import chat
 from logging import basicConfig, getLogger, INFO
 from pathlib import Path
 from dotenv import load_dotenv
+from prompts import SYSTEM_PROMPT
 
 
 load_dotenv()
@@ -29,7 +30,7 @@ def load_jsonl_dataset(jsonl_file):
         for index, line in enumerate(file):
             try:
                 content = json.loads(line)
-                image_path = content['messages'][1]['images']
+                image_path = content[1]['images']
                 LOGGER.info(f'Processing {index + 1}: {image_path}')
 
                 if not os.path.exists(image_path):
@@ -37,14 +38,14 @@ def load_jsonl_dataset(jsonl_file):
                     continue
                 
                 encoded_image = base64_encode(image_path)
-                content['messages'][1]['images'] = [encoded_image]
+                content[1]['images'] = [encoded_image]
 
-                data.append(content['messages'])
+                data.append(content)
             except Exception:
                 LOGGER.exception(f'Error processing image {image_path}.')
                 continue
 
-    return data[:1]
+    return data
 
 
 if __name__ == '__main__':
@@ -52,7 +53,15 @@ if __name__ == '__main__':
 
     if len(dataset) > 0:
         LOGGER.info(f'Loaded dataset with {len(dataset)} entries.')
-        response = ollama.chat(model=ARCHITECTURE, messages=dataset[0])
-        LOGGER.info(response)
+        for entry in dataset:
+            formatted_json = f"```json\n{json.dumps(entry[2]['content'], indent=4, ensure_ascii=False)}\n```"
+            messages = [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "images": entry[1]['images']},
+                {"role": "assistant", "content": formatted_json}
+            ]
+
+            response = chat(model=ARCHITECTURE, messages=messages)
+            LOGGER.info(response)
     else:
         LOGGER.error('Dataset is empty or failed to load.')

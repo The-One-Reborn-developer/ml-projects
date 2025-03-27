@@ -2,7 +2,7 @@ import os
 import json
 import argparse
 
-from prompts import SYSTEM_PROMPT, USER_PROMPT
+from prompts import SYSTEM_PROMPT
 
 
 def create_jsonl(image_urls_file, data_dir, output_file):
@@ -20,21 +20,13 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                 print(f"Файл {img_json_file} не найден, пропускаем.")
                 continue
 
-            input_output_record = {
-                "input_image": os.path.join(data_dir, f'{i}.jpg'),
-                "input_text": USER_PROMPT,
-                "output_text": json.dumps(img_json, ensure_ascii=False)
-            }
-
-            prompts_record = {
-                "messages": [
+            prompts_record = [
                     {
                         "role": "system",
                         "content": SYSTEM_PROMPT
                     },
                     {
                         "role": "user",
-                        "content": USER_PROMPT,
                         "images": os.path.join(data_dir, f'{i}.jpg')
                     },
                     {
@@ -42,7 +34,6 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                         "content": json.dumps(img_json, ensure_ascii=False)
                     }
                 ]
-            }
 
             outfile.write(json.dumps(prompts_record, ensure_ascii=False) + '\n')
 

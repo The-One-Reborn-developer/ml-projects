@@ -37,7 +37,6 @@ def load_jsonl_dataset(jsonl_file):
                     continue
                 
                 encoded_image = base64_encode(image_path)
-                LOGGER.info(f"Encoded image (truncated): {encoded_image[:50]}...")
                 content['messages'][1]['images'] = [encoded_image]
 
                 data.append(content['messages'])

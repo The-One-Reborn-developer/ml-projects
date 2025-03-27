@@ -4,7 +4,6 @@ import ollama
 import base64
 
 from logging import basicConfig, getLogger, INFO
-from PIL import Image
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -15,7 +14,7 @@ basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 LOGGER = getLogger(__name__)
 
 JSONL_PATH = Path('.') / 'gemma3-image-recognition' / 'bank_cards.jsonl'
-ARCHITECTURE = 'gemma3:12b'
+ARCHITECTURE = 'gemma3:4b'
 
 
 def base64_encode(image_path: str) -> str:
@@ -55,6 +54,6 @@ if __name__ == '__main__':
     if len(dataset) > 0:
         LOGGER.info(f'Loaded dataset with {len(dataset)} entries.')
         response = ollama.chat(model=ARCHITECTURE, messages=dataset[0])
-        LOGGER.info(f'Gemma 3:12b response:\n{response}')
+        LOGGER.info(response)
     else:
         LOGGER.error('Dataset is empty or failed to load.')

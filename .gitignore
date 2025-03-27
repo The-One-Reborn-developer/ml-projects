@@ -6,3 +6,4 @@ bank_card/
 urls.txt
 .env
 __pycache__
+.webui_secret_key

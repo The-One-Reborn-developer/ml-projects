@@ -30,22 +30,12 @@ def load_jsonl_dataset(jsonl_file):
         for index, line in enumerate(file):
             try:
                 content = json.loads(line)
-                image_path = content[1]['images']
-                LOGGER.info(f'Processing {index + 1}: {image_path}')
-
-                if not os.path.exists(image_path):
-                    LOGGER.warning(f'{image_path} does not exist')
-                    continue
-                
-                encoded_image = base64_encode(image_path)
-                content[1]['images'] = [encoded_image]
-
                 data.append(content)
             except Exception:
-                LOGGER.exception(f'Error processing image {image_path}.')
+                LOGGER.exception(f'Error processing line {index}.')
                 continue
 
-    return data
+    return data[:1]
 
 
 if __name__ == '__main__':
@@ -54,11 +44,11 @@ if __name__ == '__main__':
     if len(dataset) > 0:
         LOGGER.info(f'Loaded dataset with {len(dataset)} entries.')
         for entry in dataset:
-            formatted_json = f"```json\n{json.dumps(entry[2]['content'], indent=4, ensure_ascii=False)}\n```"
+            formatted_json = f"```json\n{json.dumps(entry['messages'][2]['content'], indent=4, ensure_ascii=False)}\n```"
             messages = [
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "images": entry[1]['images']},
-                {"role": "assistant", "content": formatted_json}
+                {"role": "user", "images": entry['messages'][1]['images']},
+                #{"role": "assistant", "content": formatted_json}
             ]
 
             response = chat(model=ARCHITECTURE, messages=messages)

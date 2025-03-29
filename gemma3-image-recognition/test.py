@@ -48,7 +48,7 @@ if __name__ == '__main__':
             messages = [
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "images": entry['messages'][1]['images']},
-                #{"role": "assistant", "content": formatted_json}
+                {"role": "assistant", "content": formatted_json}
             ]
 
             response = chat(model=ARCHITECTURE, messages=messages)

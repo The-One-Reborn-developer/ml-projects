@@ -35,7 +35,7 @@ def load_jsonl_dataset(jsonl_file):
                 LOGGER.exception(f'Error processing line {index}.')
                 continue
 
-    return data[:1]
+    return data
 
 
 if __name__ == '__main__':

@@ -6,11 +6,6 @@ import base64
 from prompts import SYSTEM_PROMPT
 
 
-def base64_image_encode(image_path: str) -> str:
-    with open(image_path, mode='rb') as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
-
-
 def create_jsonl(image_urls_file, data_dir, output_file):
     with open(image_urls_file, 'r') as f:
         image_urls = [line.strip() for line in f]
@@ -28,12 +23,11 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                 continue
 
             image_path = os.path.join(data_dir, f'{i}.jpg')
-            image = base64_image_encode(image_path)
 
             record = {
                 "messages": [
                     {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "images": [image]},
+                    {"role": "user", "images": [image_path]},
                     {"role": "assistant", "content": formatted_json}
                 ]
             }

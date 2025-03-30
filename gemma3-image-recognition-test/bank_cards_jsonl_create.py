@@ -1,7 +1,6 @@
 import os
 import json
 import argparse
-import base64
 
 from prompts import SYSTEM_PROMPT
 

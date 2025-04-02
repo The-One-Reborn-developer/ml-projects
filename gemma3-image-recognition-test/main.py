@@ -17,11 +17,6 @@ JSONL_PATH = Path('.') / 'gemma3-image-recognition' / 'bank_cards.jsonl'
 ARCHITECTURE = 'gemma3:4b'
 
 
-def base64_encode(image_path: str) -> str:
-    with open(image_path, mode='rb') as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
-
-
 def load_jsonl_dataset(jsonl_file):
     data = []
 

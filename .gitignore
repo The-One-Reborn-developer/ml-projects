@@ -7,3 +7,4 @@ urls.txt
 .env
 __pycache__
 .webui_secret_key
+trainer_output

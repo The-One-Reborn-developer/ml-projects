@@ -8,3 +8,4 @@ urls.txt
 __pycache__
 .webui_secret_key
 trainer_output
+deep-text-recognition-benchmark

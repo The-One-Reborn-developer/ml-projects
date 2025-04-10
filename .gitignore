@@ -9,3 +9,5 @@ __pycache__
 .webui_secret_key
 trainer_output
 deep-text-recognition-benchmark
+dataset
+model_backup

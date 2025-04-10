@@ -3,3 +3,8 @@ lmdb
 opencv-python
 natsort
 nltk
+torch
+pillow
+six
+torchvision
+easyocr

@@ -4,15 +4,13 @@ import os
 from logging import basicConfig, INFO, getLogger
 from pathlib import Path
 
-from prompts import SYSTEM_PROMPT
 
-
-basicConfig(level=INFO, format='%(asctime)s - %(levelname)s -%(message)s')
+basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 LOGGER = getLogger(__name__)
 
-DATASET_PATH = Path('.') / 'romanian_bank_cards'
+DATASET_PATH = Path('.') / ''
 IMAGE_URLS_FILE = DATASET_PATH / 'urls.txt'
-OUTPUT_FILE = DATASET_PATH / 'romanian_bank_cards.jsonl'
+OUTPUT_FILE = DATASET_PATH / '.jsonl'
 
 
 def format_data(sample):
@@ -47,7 +45,7 @@ def create_jsonl(image_urls_file, data_dir, output_file):
                 image_path = os.path.join(data_dir, f'{i}.jpg')
 
                 sample = {
-                    "system_prompt": SYSTEM_PROMPT,
+                    "system_prompt": '',  # Put a prompt here
                     "image": image_path,
                     "json_data": formatted_json,
                 }

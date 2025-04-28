@@ -1,4 +1,5 @@
-import os
+import gc
+import torch
 
 from pathlib import Path
 from PIL import Image
@@ -11,14 +12,14 @@ from trl import SFTConfig, SFTTrainer
 
 from loader import load_model_and_processor
 
-
+torch.set_float32_matmul_precision('high')
 basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 LOGGER = getLogger(__name__)
 
-login(os.getenv('HUGGINGFACE_TOKEN'))
-DATASET_PATH = Path('.') / 'romanian_bank_cards'
-JSONL_PATH = DATASET_PATH / 'romanian_bank_cards.jsonl'
-MODEL_SAVE_PATH = Path('.') / '' # Путь, куда сохраняется модель и веса
+login('')
+DATASET_PATH = Path('.') / ''
+JSONL_PATH = DATASET_PATH / '.jsonl'
+MODEL_SAVE_PATH = Path('.')
 
 DATASET = load_dataset("json", data_files=str(JSONL_PATH), split='train')
 
@@ -36,13 +37,14 @@ PEFT_CONFIG = LoraConfig(
 )
 
 TRAINING_ARGUMENTS = SFTConfig(
-    output_dir=MODEL_SAVE_PATH / "gemma3-bank-card-recognition",
+    output_dir=MODEL_SAVE_PATH / "",  # Saved model name
     num_train_epochs=1,
     per_device_train_batch_size=1,
     gradient_accumulation_steps=4,
     gradient_checkpointing=True,
+    gradient_checkpointing_kwargs={"use_reentrant": False},
     optim="adamw_torch_fused",
-    logging_steps=5,
+    logging_steps=10,
     save_strategy="epoch",
     learning_rate=2e-4,
     bf16=True,
@@ -50,8 +52,7 @@ TRAINING_ARGUMENTS = SFTConfig(
     warmup_ratio=0.03,
     lr_scheduler_type="constant",
     push_to_hub=False,
-    report_to="tensorboard",
-    gradient_checkpointing_kwargs={"use_reentrant": False},
+    report_to=[],
     dataset_text_field="",
     dataset_kwargs={"skip_prepare_dataset": True},
 )
@@ -76,10 +77,8 @@ def process_vision_info(messages: list[dict]) -> list[Image.Image]:
                     LOGGER.info('Missing image data. Skipping.')
 
                 try:
-                    LOGGER.info(f'Processing image {image_path}...')
                     image = Image.open(image_path).convert('RGB')
                     image_inputs.append(image)
-                    LOGGER.info(f'Successfully added image {image_path} to image inputs list.')
                 except Exception:
                     LOGGER.exception(f'Error processing image.')
                     continue
@@ -125,6 +124,10 @@ if __name__ == '__main__':
         processing_class=PROCESSOR,
         data_collator=collate_fn
     )
+
+    torch.cuda.empty_cache()
+    torch.cuda.reset_peak_memory_stats()
+    gc.collect()
 
     trainer.train()
     trainer.save_model()

@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 
-DIRECTORY = Path('.') / 'romanian_bank_cards'
+DIRECTORY = Path('.') / ''  # Dataset path
 OUTPUT_FILE = DIRECTORY / 'urls.txt'
 
 
